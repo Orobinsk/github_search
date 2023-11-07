@@ -1,0 +1,25 @@
+.card {
+  max-width: 350px;
+  border-radius: 8px;
+  background-color: #fff;
+  margin: 10px;
+  padding: 5px;
+
+}
+
+.logo {
+  max-width: 100px;
+}
+
+.title{
+  display: block;
+}
+
+.stars_info{
+display: flex;
+  justify-content: space-around;
+}
+
+.btn{
+  cursor: pointer;
+}
