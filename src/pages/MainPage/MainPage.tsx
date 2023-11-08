@@ -1,55 +1,29 @@
-import React, {FC, useContext, useEffect, useRef, useState} from 'react';
-import {Link} from "react-router-dom";
-import {REPOSITORY_ROUTE} from "../../utils/const";
+import React, {FC, useContext, useRef, useState} from 'react';
 import RepositoriesList from "../../components/RepositoriesList";
 import cls from './MainPage.module.scss'
-import {observe} from "web-vitals/dist/modules/lib/observe";
 import {observer} from "mobx-react-lite";
 import {Context} from "../../index";
 import {fetchRepositoriesList} from "../../api/api";
+import ButtonCopy from "../../components/ButtonCopy";
 
-
-// const mockRepository = {
-//     id: 1,
-//     name: "kafka-streams-machine-learning-examples",
-//     full_name: "confluentinc/kafka-streams-examples",
-//     owner: {
-//         login: "confluentinc",
-//         avatar_url: "https://avatars.githubusercontent.com/u/9439498?v=4",
-//     },
-//     html_url: "https://github.com/confluentinc/kafka-streams-examples",
-//     stargazers_count: 10,
-//     forks: 3,
-// }
-// const mockRepository2 = {
-//     id: 2,
-//     name: "kafka-streams-machine-learning-examples",
-//     full_name: "confluentinc/kafka-streams-examples",
-//     owner: {
-//         login: "confluentinc",
-//         avatar_url: "https://avatars.githubusercontent.com/u/9439498?v=4",
-//     },
-//     html_url: "https://github.com/confluentinc/kafka-streams-examples",
-//     stargazers_count: 10,
-//     forks: 3,
-// }
 
 const MainPage: FC = observer(() => {
     const [searchValue, setSearchValue] = useState<string>('')
-    const [repositories, setRepositories] = useState([])
+    const [data, setData] = useState({total_count: null, items: []})
     const throttleInProgress = useRef(false)
-    const [loadData, setLoadData] = useState(false)
+    const [loadingData, setLoadingData] = useState(false)
     const {favorites} = useContext(Context)
 
-  if (loadData){
-        fetchRepositoriesList(searchValue)
-            .then(data => setRepositories(data.items))
-      setLoadData(false)
+    if (loadingData) {
+        if (searchValue !== '') {
+            fetchRepositoriesList(searchValue)
+                .then(data => {
+                    console.log(data)
+                    if (data) setData(data)
+                })
+        }
+        setLoadingData(false)
     }
-    // useEffect(() => {
-    //
-    //     console.log('load data:', searchValue)
-    // }, [loadData])
 
     function handleThrottle() {
         if (throttleInProgress.current) {
@@ -57,12 +31,9 @@ const MainPage: FC = observer(() => {
         }
         throttleInProgress.current = true;
         setTimeout(() => {
-            setLoadData(true)
-
-
-                // .catch(err=>alert(err))
+            setLoadingData(true)
             throttleInProgress.current = false;
-        }, 3000);
+        }, 2000);
     }
 
     function handleInput(e: any) {
@@ -70,8 +41,10 @@ const MainPage: FC = observer(() => {
         handleThrottle()
     }
 
+
     return (
         <div>
+            <h1>Поиск GitHub</h1>
             <input
                 name="searchRepository"
                 type="search"
@@ -79,13 +52,14 @@ const MainPage: FC = observer(() => {
                 value={searchValue}
                 onChange={e => handleInput(e)}
             />
-            <button onClick={() => console.log(favorites?.repositories)}>
-                get favorites
-            </button>
+            <ButtonCopy searchValue={searchValue}/>
             <div className={cls.wrap_lists}>
                 <div className={cls.list}>
-                    <h1>Список репозиториев:</h1>
-                    <RepositoriesList repositories={repositories}/>
+                    <h2>Список репозиториев:</h2>
+                    {data.total_count === 0 &&
+                        <h2>Ничего не найдено. Попробуйте изменить критерии поиска</h2>
+                    }
+                    <RepositoriesList repositories={data.items}/>
                 </div>
                 {favorites?.repositories.length ?
                     (<div className={cls.list}>
@@ -95,10 +69,7 @@ const MainPage: FC = observer(() => {
                         </div>
                     ) : ''
                 }
-
             </div>
-
-
         </div>
     );
 });

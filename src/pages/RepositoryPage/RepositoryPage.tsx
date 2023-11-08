@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {Params, useNavigate, useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {fetchRepository} from "../../api/api";
 import cls from './RepositoryPage.module.scss'
-import {REPOSITORY_ROUTE} from "../../utils/const";
 import {IRepository} from "../../types/types";
 
 const initialRepositoryState = {
@@ -18,29 +17,18 @@ const initialRepositoryState = {
     forks: 0,
 };
 
-const mockRepository = {
-    id: 1,
-    name: "kafka-streams-machine-learning-examples",
-    full_name: "confluentinc/kafka-streams-examples",
-    owner: {
-        login: "confluentinc",
-        avatar_url: "https://avatars.githubusercontent.com/u/9439498?v=4",
-    },
-    html_url: "https://github.com/confluentinc/kafka-streams-examples",
-    stargazers_count: 10,
-    forks: 3,
-}
-
 const RepositoryPage = () => {
-    const {owner,repo} = useParams();
-    const [repository,setRepository]=useState<IRepository>(mockRepository)
+    const {owner, repo} = useParams();
+    const [repository, setRepository] = useState<IRepository>(initialRepositoryState)
     const navigate = useNavigate();
 
-    useEffect(()=>{
-        if (owner && repo){
-            // fetchRepository(owner,repo).then(data => setRepository(data))
+    useEffect(() => {
+        if (owner && repo) {
+            fetchRepository(owner, repo).then(data => {
+                if (data) setRepository(data)
+            })
         }
-    },[])
+    }, [owner, repo])
 
     return (
         <div className={cls.card}>

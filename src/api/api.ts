@@ -1,24 +1,28 @@
-export async function fetchRepositoriesList(searchValue:string){
-    console.log(searchValue)
+export async function fetchRepositoriesList(searchValue: string) {
     try {
-
-const response = await fetch(`https://api.github.com/search/repositories?q=${searchValue}`)
-// const response = await fetch(`https://api.gi.com/search/repositories?q=${searchValue}`)
-        return response.json()
+        const response = await fetch(`https://api.github.com/search/repositories?q=${searchValue}`);
+console.log(response)
+        if (response.status === 403) {
+            alert('Слишком частое обращение к серверу. Подождите 1 минуту');
+        } else if (response.status >= 200 && response.status < 300) {
+            return response.json();
+        }
+    } catch (error) {
+        alert('Произошла ошибка при загрузке данных');
     }
-    catch (error){
-        alert('Произошла ошибка при загрузке данных')
-        // return (error.message)
-    }
+    return null;
 }
 
-export async function fetchRepository(owner:string, repo:string){
+export async function fetchRepository(owner: string, repo: string) {
     try {
-const response = await fetch(`https://api.github.com/repos/${owner}/${repo}`)
-        return response.json()
-//         console.log(searchValue,'load data')
+        const response = await fetch(`https://api.github.com/repos/${owner}/${repo}`)
+        if (response.status === 403) {
+            alert('Слишком частое обращение к серверу. Подождите 1 минуту');
+        } else if (response.status >= 200 && response.status < 300) {
+            return response.json();
+        }
+    } catch (error) {
+        alert('Произошла ошибка при загрузке данных')
     }
-    catch (error){
-        console.log(error)
-    }
+    return null;
 }
