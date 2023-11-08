@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Params, useNavigate, useParams} from "react-router-dom";
 import {fetchRepository} from "../../api/api";
 import cls from './RepositoryPage.module.scss'
-import {REPOSITORY_ROUTE} from "../../const/const";
+import {REPOSITORY_ROUTE} from "../../utils/const";
 import {IRepository} from "../../types/types";
 
 const initialRepositoryState = {

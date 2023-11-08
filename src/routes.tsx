@@ -1,4 +1,4 @@
-import {MAIN_ROUTE, REPOSITORY_ROUTE} from "./const/const";
+import {MAIN_ROUTE, REPOSITORY_ROUTE} from "./utils/const";
 import MainPage from "./pages/MainPage/MainPage";
 import RepositoryPage from "./pages/RepositoryPage/RepositoryPage";
 

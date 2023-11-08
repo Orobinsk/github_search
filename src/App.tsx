@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 import {Navigate, Route, Routes} from "react-router-dom";
 import {routes} from "./routes";
-import {MAIN_ROUTE} from "./const/const";
+import {MAIN_ROUTE} from "./utils/const";
 
 function App() {
   return (
