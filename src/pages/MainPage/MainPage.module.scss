@@ -1,9 +1,12 @@
 .wrap_lists{
   display: flex;
   justify-content: space-around;
-  animation: all 1s ease;
 }
 
-.list{
-  max-width: 50%
+@media screen and (max-width: 768px) {
+  .wrap_lists{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 }

@@ -42,7 +42,7 @@ const MainPage: FC = observer(() => {
     }
 
     return (
-        <div>
+        <>
             <h1>Поиск GitHub</h1>
             <input
                 name="searchRepository"
@@ -53,8 +53,7 @@ const MainPage: FC = observer(() => {
             />
             <ButtonCopy searchValue={searchValue}/>
             <div className={cls.wrap_lists}>
-                <div className={cls.list}>
-
+                <div>
                     {data.total_count === 0 &&
                         <h2>Ничего не найдено. Попробуйте изменить критерии поиска</h2>
                     }
@@ -65,7 +64,7 @@ const MainPage: FC = observer(() => {
                         </>)}
                 </div>
                 {favorites?.repositories.length ?
-                    (<div className={cls.list}>
+                    (<div>
                             <h2>Избранные
                                 репозитории:</h2>
                             <RepositoriesList repositories={favorites?.repositories}/>
@@ -73,7 +72,7 @@ const MainPage: FC = observer(() => {
                     ) : ''
                 }
             </div>
-        </div>
+        </>
     );
 });
 
