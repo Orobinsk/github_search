@@ -23,10 +23,8 @@ const[active,setActive]=useState(false)
         copy(searchValue)
     }
     return (
-
             <button
                 onClick={handleClickCopy}
-
             >
                 {active?'Copied':'Copy'}
             </button>

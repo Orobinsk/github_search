@@ -1,15 +1,16 @@
 import React, {FC, useContext, useRef, useState} from 'react';
-import RepositoriesList from "../../components/RepositoriesList";
+import RepositoriesList from "../../components/RepositoriesList/RepositoriesList";
 import cls from './MainPage.module.scss'
 import {observer} from "mobx-react-lite";
 import {Context} from "../../index";
 import {fetchRepositoriesList} from "../../api/api";
 import ButtonCopy from "../../components/ButtonCopy";
+import {IRepositoriesFetch} from "../../types/types";
 
 
 const MainPage: FC = observer(() => {
     const [searchValue, setSearchValue] = useState<string>('')
-    const [data, setData] = useState({total_count: null, items: []})
+    const [data, setData] = useState<IRepositoriesFetch>({total_count: -1, items: [],incomplete_results:false})
     const throttleInProgress = useRef(false)
     const [loadingData, setLoadingData] = useState(false)
     const {favorites} = useContext(Context)
@@ -18,7 +19,6 @@ const MainPage: FC = observer(() => {
         if (searchValue !== '') {
             fetchRepositoriesList(searchValue)
                 .then(data => {
-                    console.log(data)
                     if (data) setData(data)
                 })
         }
@@ -36,11 +36,10 @@ const MainPage: FC = observer(() => {
         }, 2000);
     }
 
-    function handleInput(e: any) {
+    function handleInput(e: React.ChangeEvent<HTMLInputElement>) {
         setSearchValue(e.target.value)
         handleThrottle()
     }
-
 
     return (
         <div>
@@ -55,16 +54,20 @@ const MainPage: FC = observer(() => {
             <ButtonCopy searchValue={searchValue}/>
             <div className={cls.wrap_lists}>
                 <div className={cls.list}>
-                    <h2>Список репозиториев:</h2>
+
                     {data.total_count === 0 &&
                         <h2>Ничего не найдено. Попробуйте изменить критерии поиска</h2>
                     }
-                    <RepositoriesList repositories={data.items}/>
+                    {data.total_count>0 &&
+                        (<>
+                            <h2>Список репозиториев:</h2>
+                            <RepositoriesList repositories={data.items}/>
+                        </>)}
                 </div>
                 {favorites?.repositories.length ?
                     (<div className={cls.list}>
-                            <h1>Избранные
-                                репозитории:</h1>
+                            <h2>Избранные
+                                репозитории:</h2>
                             <RepositoriesList repositories={favorites?.repositories}/>
                         </div>
                     ) : ''

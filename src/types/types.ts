@@ -69,3 +69,10 @@ export interface IRepository {
     // "svn_url": "https://svn.github.com/dtrupenn/Tetris",
     "forks": number,
 }
+
+export interface IRepositoriesFetch {
+    "total_count": number,
+    "incomplete_results": boolean,
+    "items": IRepository[]
+}
+

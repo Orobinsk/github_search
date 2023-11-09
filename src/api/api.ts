@@ -1,7 +1,9 @@
-export async function fetchRepositoriesList(searchValue: string) {
+import {IRepositoriesFetch, IRepository} from "../types/types";
+
+export async function fetchRepositoriesList(searchValue: string): Promise<IRepositoriesFetch | null> {
     try {
         const response = await fetch(`https://api.github.com/search/repositories?q=${searchValue}`);
-console.log(response)
+        console.log(response)
         if (response.status === 403) {
             alert('Слишком частое обращение к серверу. Подождите 1 минуту');
         } else if (response.status >= 200 && response.status < 300) {
@@ -13,7 +15,7 @@ console.log(response)
     return null;
 }
 
-export async function fetchRepository(owner: string, repo: string) {
+export async function fetchRepository(owner: string, repo: string): Promise<IRepository | null> {
     try {
         const response = await fetch(`https://api.github.com/repos/${owner}/${repo}`)
         if (response.status === 403) {
