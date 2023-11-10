@@ -6,18 +6,20 @@ import {Context} from "../../index";
 import {fetchRepositoriesList} from "../../api/api";
 import ButtonCopy from "../../components/ButtonCopy";
 import {IRepositoriesFetch} from "../../types/types";
+import Pagination from "../../components/Pagination";
 
 
 const MainPage: FC = observer(() => {
     const [searchValue, setSearchValue] = useState<string>('')
-    const [data, setData] = useState<IRepositoriesFetch>({total_count: -1, items: [],incomplete_results:false})
+    const [data, setData] = useState<IRepositoriesFetch>({total_count: -1, items: [], incomplete_results: false})
     const throttleInProgress = useRef(false)
     const [loadingData, setLoadingData] = useState(false)
     const {favorites} = useContext(Context)
+    const [currentPage, setCurrentPage] = useState(1)
 
     if (loadingData) {
         if (searchValue !== '') {
-            fetchRepositoriesList(searchValue)
+            fetchRepositoriesList(searchValue, currentPage)
                 .then(data => {
                     if (data) setData(data)
                 })
@@ -38,8 +40,10 @@ const MainPage: FC = observer(() => {
 
     function handleInput(e: React.ChangeEvent<HTMLInputElement>) {
         setSearchValue(e.target.value)
+        setCurrentPage(1);
         handleThrottle()
     }
+
 
     return (
         <>
@@ -57,7 +61,7 @@ const MainPage: FC = observer(() => {
                     {data.total_count === 0 &&
                         <h2>Ничего не найдено. Попробуйте изменить критерии поиска</h2>
                     }
-                    {data.total_count>0 &&
+                    {data.total_count > 0 &&
                         (<>
                             <h2>Список репозиториев:</h2>
                             <RepositoriesList repositories={data.items}/>
@@ -72,6 +76,14 @@ const MainPage: FC = observer(() => {
                     ) : ''
                 }
             </div>
+            {data.total_count>1&&
+                <Pagination
+                    currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
+                    total_count={data.total_count}
+                    setLoadingData={setLoadingData}
+                />
+            }
         </>
     );
 });

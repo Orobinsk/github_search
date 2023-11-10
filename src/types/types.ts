@@ -9,6 +9,9 @@ export interface IRepository {
     "html_url": string,
     "stargazers_count": number,
     "forks": number,
+    "description":string,
+    "watchers":number,
+    "size":number
 }
 
 export interface IRepositoriesFetch {
