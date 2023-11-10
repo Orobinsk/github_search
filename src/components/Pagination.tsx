@@ -1,33 +1,33 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, { type FC, useEffect, useState } from 'react'
 
-interface paginationProps{
-    currentPage:number,
-    setCurrentPage:(value: number) => void;
-    total_count:number;
-    setLoadingData:(value: boolean) => void
+interface paginationProps {
+  currentPage: number
+  setCurrentPage: (value: number) => void
+  totalCount: number
+  setLoadingData: (value: boolean) => void
 }
 
-const Pagination:FC<paginationProps> = ({currentPage,setCurrentPage,total_count, setLoadingData}) => {
-    const[totalPage,setTotalPage]=useState(1)
+const Pagination: FC<paginationProps> = ({ currentPage, setCurrentPage, totalCount, setLoadingData }) => {
+  const [totalPage, setTotalPage] = useState(1)
 
-    useEffect(()=>{
-        setTotalPage(Math.ceil(total_count/30))
-    },[total_count])
+  useEffect(() => {
+    setTotalPage(Math.ceil(totalCount / 30))
+  }, [totalCount])
 
-    function handlePageChange(newPage: number) {
-        if (newPage >= 1 && newPage <= totalPage) {
-            setCurrentPage(newPage);
-            setLoadingData(true)
-        }
+  function handlePageChange (newPage: number): void {
+    if (newPage >= 1 && newPage <= totalPage) {
+      setCurrentPage(newPage)
+      setLoadingData(true)
     }
+  }
 
-    return (
+  return (
         <div>
             <h3>Page {currentPage} of {totalPage}</h3>
-            <button onClick={() => handlePageChange(currentPage - 1)}>Previous Page</button>
-            <button onClick={() => handlePageChange(currentPage + 1)}>Next Page</button>
+            <button onClick={() => { handlePageChange(currentPage - 1) }}>Previous Page</button>
+            <button onClick={() => { handlePageChange(currentPage + 1) }}>Next Page</button>
         </div>
-    );
-};
+  )
+}
 
-export default Pagination;
+export default Pagination

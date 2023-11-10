@@ -1,34 +1,34 @@
-import React, {FC, useEffect, useState} from 'react';
-import copy from "clipboard-copy";
+import React, { type FC, useEffect, useState } from 'react'
+import copy from 'clipboard-copy'
 
 interface ButtonCopyType {
-    searchValue:string
+  searchValue: string
 }
 
-const ButtonCopy:FC<ButtonCopyType> = ({searchValue}) => {
-const[active,setActive]=useState(false)
+const ButtonCopy: FC<ButtonCopyType> = ({ searchValue }) => {
+  const [active, setActive] = useState(false)
 
-    useEffect(() => {
-        let timer: ReturnType<typeof setTimeout>;
-        if (active) {
-            timer = setTimeout(() => {
-                setActive(false);
-            }, 2000);
-        }
-        return () => clearTimeout(timer);
-    }, [active]);
-
-    function handleClickCopy(){
-    setActive(true)
-        copy(searchValue)
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>
+    if (active) {
+      timer = setTimeout(() => {
+        setActive(false)
+      }, 2000)
     }
-    return (
+    return () => { clearTimeout(timer) }
+  }, [active])
+
+  function handleClickCopy (): void {
+    setActive(true)
+    void copy(searchValue)
+  }
+  return (
             <button
                 onClick={handleClickCopy}
             >
-                {active?'Copied':'Copy'}
+                {active ? 'Copied' : 'Copy'}
             </button>
-    );
-};
+  )
+}
 
-export default ButtonCopy;
+export default ButtonCopy

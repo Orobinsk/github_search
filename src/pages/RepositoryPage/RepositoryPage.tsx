@@ -1,32 +1,30 @@
-import React, {useEffect, useState} from 'react';
-import {useNavigate, useParams} from "react-router-dom";
-import {fetchRepository} from "../../api/api";
+import React, { type ReactNode, useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { fetchRepository } from '../../api/api'
 import cls from './RepositoryPage.module.scss'
-import {IRepository} from "../../types/types";
-import {Loader} from "../../components/Loader/Loader";
+import { type IRepository } from '../../types/types'
+import Loader from '../../components/Loader/Loader'
 
+const RepositoryPage = (): ReactNode => {
+  const { owner, repo } = useParams()
+  const [repository, setRepository] = useState<IRepository | null>(null)
+  const [loading, setLoading] = useState(true)
+  const navigate = useNavigate()
 
-
-const RepositoryPage = () => {
-    const {owner, repo} = useParams();
-    const [repository, setRepository] = useState<IRepository | null>(null)
-    const [loading,setLoading]=useState(true)
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        if (owner && repo) {
-            fetchRepository(owner, repo).then(data => {
-                if (data) setRepository(data)
-                setLoading(false)
-            })
-        }
-    }, [owner, repo])
-if (!loading) {
+  useEffect(() => {
+    if (owner && repo) {
+      fetchRepository(owner, repo).then(data => {
+        if (data) setRepository(data)
+        setLoading(false)
+      })
+    }
+  }, [owner, repo])
+  if (!loading) {
     return (
                 <div className={cls.card}>
                     <button
                         className={cls.btn}
-                        onClick={() => navigate(-1)}
+                        onClick={() => { navigate(-1) }}
                     >go back</button>
                     {repository && (
                         <>
@@ -47,11 +45,12 @@ if (!loading) {
                     )}
 
                 </div>
-    );
-} else return(
+    )
+  } else {
+    return (
     <Loader/>
-)
+    )
+  }
+}
 
-};
-
-export default RepositoryPage;
+export default RepositoryPage
