@@ -1,10 +1,10 @@
-import React from 'react'
-import './App.css'
-import { Navigate, Route, Routes } from 'react-router-dom'
-import { routes } from './routes'
-import { MAIN_ROUTE } from './utils/const'
+import React from 'react';
+import './App.css';
+import {Navigate, Route, Routes} from "react-router-dom";
+import {routes} from "./routes";
+import {MAIN_ROUTE} from "./utils/const";
 
-function App (): React.ReactNode {
+function App() {
   return (
       <div className='App'>
           <Routes>
@@ -22,7 +22,7 @@ function App (): React.ReactNode {
               />
           </Routes>
       </div>
-  )
+  );
 }
 
-export default App
+export default App;

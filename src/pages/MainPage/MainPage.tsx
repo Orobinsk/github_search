@@ -1,49 +1,51 @@
-import React, { type FC, useContext, useRef, useState } from 'react'
-import RepositoriesList from '../../components/RepositoriesList/RepositoriesList'
+import React, {FC, useContext, useRef, useState} from 'react';
+import RepositoriesList from "../../components/RepositoriesList/RepositoriesList";
 import cls from './MainPage.module.scss'
-import { observer } from 'mobx-react-lite'
-import { Context } from '../../index'
-import { fetchRepositoriesList } from '../../api/api'
-import ButtonCopy from '../../components/ButtonCopy'
-import { type IRepositoriesFetch } from '../../types/types'
-import Pagination from '../../components/Pagination'
+import {observer} from "mobx-react-lite";
+import {Context} from "../../index";
+import {fetchRepositoriesList} from "../../api/api";
+import ButtonCopy from "../../components/ButtonCopy";
+import {IRepositoriesFetch} from "../../types/types";
+import Pagination from "../../components/Pagination";
+
 
 const MainPage: FC = observer(() => {
-  const [searchValue, setSearchValue] = useState<string>('')
-  const [data, setData] = useState<IRepositoriesFetch>({ total_count: -1, items: [], incomplete_results: false })
-  const throttleInProgress = useRef(false)
-  const [loadingData, setLoadingData] = useState(false)
-  const { favorites } = useContext(Context)
-  const [currentPage, setCurrentPage] = useState(1)
+    const [searchValue, setSearchValue] = useState<string>('')
+    const [data, setData] = useState<IRepositoriesFetch>({total_count: -1, items: [], incomplete_results: false})
+    const throttleInProgress = useRef(false)
+    const [loadingData, setLoadingData] = useState(false)
+    const {favorites} = useContext(Context)
+    const [currentPage, setCurrentPage] = useState(1)
 
-  if (loadingData) {
-    if (searchValue !== '') {
-      fetchRepositoriesList(searchValue, currentPage)
-        .then(data => {
-          if (data != null) setData(data)
-        })
+    if (loadingData) {
+        if (searchValue !== '') {
+            fetchRepositoriesList(searchValue, currentPage)
+                .then(data => {
+                    if (data) setData(data)
+                })
+        }
+        setLoadingData(false)
     }
-    setLoadingData(false)
-  }
 
-  function handleThrottle (): void {
-    if (throttleInProgress.current) {
-      return
+    function handleThrottle() {
+        if (throttleInProgress.current) {
+            return;
+        }
+        throttleInProgress.current = true;
+        setTimeout(() => {
+            setLoadingData(true)
+            throttleInProgress.current = false;
+        }, 2000);
     }
-    throttleInProgress.current = true
-    setTimeout(() => {
-      setLoadingData(true)
-      throttleInProgress.current = false
-    }, 2000)
-  }
 
-  function handleInput (e: React.ChangeEvent<HTMLInputElement>): void {
-    setSearchValue(e.target.value)
-    setCurrentPage(1)
-    handleThrottle()
-  }
+    function handleInput(e: React.ChangeEvent<HTMLInputElement>) {
+        setSearchValue(e.target.value)
+        setCurrentPage(1);
+        handleThrottle()
+    }
 
-  return (
+
+    return (
         <>
             <h1>Поиск GitHub</h1>
             <input
@@ -51,7 +53,7 @@ const MainPage: FC = observer(() => {
                 type="search"
                 autoFocus
                 value={searchValue}
-                onChange={e => { handleInput(e) }}
+                onChange={e => handleInput(e)}
             />
             <ButtonCopy searchValue={searchValue}/>
             <div className={cls.wrap_lists}>
@@ -65,26 +67,25 @@ const MainPage: FC = observer(() => {
                             <RepositoriesList repositories={data.items}/>
                         </>)}
                 </div>
-                {favorites?.repositories.length
-                  ? (<div>
+                {favorites?.repositories.length ?
+                    (<div>
                             <h2>Избранные
                                 репозитории:</h2>
-                            <RepositoriesList repositories={favorites.repositories}/>
+                            <RepositoriesList repositories={favorites?.repositories}/>
                         </div>
-                    )
-                  : ''
+                    ) : ''
                 }
             </div>
-            {data.total_count > 1 &&
+            {data.total_count>1&&
                 <Pagination
                     currentPage={currentPage}
                     setCurrentPage={setCurrentPage}
-                    totalCount={data.total_count}
+                    total_count={data.total_count}
                     setLoadingData={setLoadingData}
                 />
             }
         </>
-  )
-})
+    );
+});
 
-export default MainPage
+export default MainPage;
